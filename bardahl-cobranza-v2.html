@@ -1,0 +1,2660 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bardahl · Sistema de Cobranza Agrupada</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════════
+   BARDAHL BRAND SYSTEM — DARK MODE
+   Rojo: #CC0000 / Negro: #0D0D0D
+   Tipografía: Oswald (display) + Barlow (body)
+   ══════════════════════════════════════════ */
+    :root {
+      --brd-red: #fed105;
+      --brd-red-dark: #ae8e00;
+      --brd-red-light: #ffe056;
+      --brd-red-glow: rgba(254, 209, 5, 0.18);
+      --brd-red-dim: rgba(254, 209, 5, 0.08);
+
+      --bg: #0D0D0D;
+      --bg-2: #141414;
+      --bg-3: #1A1A1A;
+      --bg-4: #222222;
+      --bg-5: #2A2A2A;
+
+      --border: rgba(255, 255, 255, 0.06);
+      --border-red: rgba(204, 0, 0, 0.25);
+
+      --txt: #EFEFEF;
+      --txt-2: #AAAAAA;
+      --txt-3: #868477;
+      --txt-4: #3A3A3A;
+
+      --green: #5ecd8c;
+      --yellow: #fed105;
+      --blue: #517bc2;
+
+      --f-display: 'Oswald', sans-serif;
+      --f-cond: 'Barlow Condensed', sans-serif;
+      --f-body: 'Barlow', sans-serif;
+      --f-mono: 'Source Code Pro', monospace;
+
+      --radius: 8px;
+      --sidebar-w: 230px;
+      --topbar-h: 56px;
+      --transition: 0.18s ease;
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--txt);
+      font-family: var(--f-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══ SCROLLBAR ══ */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg-5);
+      border-radius: 2px;
+    }
+
+    /* ══════════════════════════
+   LAYOUT SHELL
+   ══════════════════════════ */
+    .shell {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ══════════════════════════
+   SIDEBAR
+   ══════════════════════════ */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--bg-2);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+      z-index: 100;
+      transition: transform var(--transition), width var(--transition);
+    }
+
+    /* Red left accent line */
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--brd-red);
+    }
+
+    /* ── Brand ── */
+    .brand {
+      padding: 20px 20px 16px 24px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 4px;
+    }
+
+    /* SVG Bardahl-style "B" diamond badge */
+    .brand-badge {
+      width: 100%;
+      height: 70px;
+      flex-shrink: 0;
+    }
+
+    .brand-wordmark {
+      font-family: var(--f-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--txt);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .brand-wordmark span {
+      color: var(--brd-red);
+    }
+
+    .brand-tagline {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      color: #fff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+      text-align: center;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      flex: 1;
+      padding: 12px 0 8px;
+    }
+
+    .nav-section {
+      font-family: var(--f-mono);
+      font-size: 8px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--txt-4);
+      padding: 10px 20px 4px 22px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 18px 9px 22px;
+      cursor: pointer;
+      color: var(--txt-2);
+      font-family: var(--f-cond);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      border-left: 3px solid transparent;
+      margin-left: -3px;
+      /* compensate sidebar::before */
+      transition: all var(--transition);
+      position: relative;
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      color: var(--txt);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-item.active {
+      color: var(--txt);
+      background: var(--brd-red-dim);
+      border-left-color: var(--brd-red);
+      font-weight: 600;
+    }
+
+    .nav-item .nav-icon {
+      width: 18px;
+      text-align: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .nav-item.active .nav-icon {
+      opacity: 1;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--brd-red);
+      color: rgb(0, 0, 0);
+      font-family: var(--f-mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 10px;
+      line-height: 1.5;
+    }
+
+    /* ── User card ── */
+    .sidebar-footer {
+      padding: 14px 18px 16px 22px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 34px;
+      height: 34px;
+      background: var(--brd-red);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--f-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: #0000009e;
+      flex-shrink: 0;
+      letter-spacing: 1px;
+    }
+
+    .user-name {
+      font-family: var(--f-cond);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--txt);
+      line-height: 1.2;
+    }
+
+    .user-role {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      color: var(--txt-3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      margin-left: auto;
+      flex-shrink: 0;
+      animation: blink 2.5s ease infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    /* ══════════════════════════
+   MAIN AREA
+   ══════════════════════════ */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* Red bottom accent */
+    .topbar::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--brd-red) 0%, transparent 60%);
+      opacity: 0.5;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--txt);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+    }
+
+    .page-title {
+      font-family: var(--f-display);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .topbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .sync-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--f-mono);
+      font-size: 9px;
+      color: var(--green);
+      background: rgba(0, 200, 83, 0.08);
+      border: 1px solid rgba(0, 200, 83, 0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .sync-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2s infinite;
+    }
+
+    .date-tag {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--txt-3);
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    /* ── Content ── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px 24px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--bg-5) transparent;
+    }
+
+    /* ══════════════════════════
+   SCREEN SYSTEM
+   ══════════════════════════ */
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: fadeUp 0.2s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ══════════════════════════
+   KPI CARDS
+   ══════════════════════════ */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .kpi {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+
+    .kpi:hover {
+      border-color: var(--border-red);
+    }
+
+    .kpi::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .kpi.k-red::after {
+      background: var(--brd-red);
+    }
+
+    .kpi.k-green::after {
+      background: var(--green);
+    }
+
+    .kpi.k-yellow::after {
+      background: var(--yellow);
+    }
+
+    .kpi.k-blue::after {
+      background: var(--blue);
+    }
+
+    .kpi-label {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--txt-3);
+      margin-bottom: 8px;
+    }
+
+    .kpi-val {
+      font-family: var(--f-display);
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .kpi.k-red .kpi-val {
+      color: var(--brd-red);
+    }
+
+    .kpi.k-green .kpi-val {
+      color: var(--green);
+    }
+
+    .kpi.k-yellow .kpi-val {
+      color: var(--yellow);
+    }
+
+    .kpi.k-blue .kpi-val {
+      color: var(--blue);
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--txt-3);
+      line-height: 1.4;
+    }
+
+    .kpi-sub .pos {
+      color: var(--green);
+    }
+
+    .kpi-sub .neg {
+      color: var(--brd-red);
+    }
+
+    /* ══════════════════════════
+   GRID HELPERS
+   ══════════════════════════ */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .grid-32 {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* ══════════════════════════
+   CARD
+   ══════════════════════════ */
+    .card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
+    }
+
+    .card-title {
+      font-family: var(--f-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .card-action {
+      font-family: var(--f-mono);
+      font-size: 12px;
+      color: var(--brd-red);
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .card-action:hover {
+      color: var(--txt);
+    }
+
+    /* ══════════════════════════
+   TABLE
+   ══════════════════════════ */
+    .tbl-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 9px 14px;
+      text-align: left;
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--txt-3);
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 14px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+      color: var(--txt);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .mono {
+      font-family: var(--f-mono);
+      font-size: 11px;
+    }
+
+    .red-txt {
+      color: var(--brd-red);
+    }
+
+    .dim-txt {
+      color: var(--txt-3);
+    }
+
+    .bold {
+      font-weight: 600;
+    }
+
+    /* ══════════════════════════
+   BADGES
+   ══════════════════════════ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .badge::before {
+      content: '●';
+      font-size: 5px;
+    }
+
+    .b-green {
+      background: rgba(0, 200, 83, 0.1);
+      color: var(--green);
+      border: 1px solid rgba(0, 200, 83, 0.2);
+    }
+
+    .b-red {
+      background: rgba(204, 0, 0, 0.1);
+      color: var(--brd-red);
+      border: 1px solid rgba(204, 0, 0, 0.2);
+    }
+
+    .b-yellow {
+      background: rgba(255, 179, 0, 0.1);
+      color: var(--yellow);
+      border: 1px solid rgba(255, 179, 0, 0.2);
+    }
+
+    .b-blue {
+      background: rgba(41, 121, 255, 0.1);
+      color: var(--blue);
+      border: 1px solid rgba(41, 121, 255, 0.2);
+    }
+
+    .b-gray {
+      background: var(--bg-4);
+      color: var(--txt-2);
+      border: 1px solid var(--border);
+    }
+
+    /* ══════════════════════════
+   ACTIVITY FEED
+   ══════════════════════════ */
+    .feed {
+      padding: 2px 0;
+    }
+
+    .feed-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 11px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      transition: background var(--transition);
+    }
+
+    .feed-item:last-child {
+      border-bottom: none;
+    }
+
+    .feed-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .feed-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .fi-green {
+      background: rgba(0, 200, 83, 0.1);
+      color: var(--green);
+    }
+
+    .fi-red {
+      background: rgba(204, 0, 0, 0.1);
+      color: var(--brd-red);
+    }
+
+    .fi-yellow {
+      background: rgba(255, 179, 0, 0.1);
+      color: var(--yellow);
+    }
+
+    .fi-blue {
+      background: rgba(41, 121, 255, 0.1);
+      color: var(--blue);
+    }
+
+    .feed-msg {
+      font-size: 14px;
+      color: var(--txt);
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .feed-meta {
+      font-family: var(--f-mono);
+      font-size: 12px;
+      color: var(--txt-3);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .feed-ref {
+      color: var(--brd-red);
+    }
+
+    /* ══════════════════════════
+   MINI BARS
+   ══════════════════════════ */
+    .bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 36px;
+      padding: 0 18px 12px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      min-width: 6px;
+    }
+
+    .bar:hover {
+      opacity: 0.7;
+    }
+
+    /* ══════════════════════════
+   COBRO FLOW
+   ══════════════════════════ */
+    .flow-wrap {
+      max-width: 820px;
+    }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      gap: 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--txt-3);
+      white-space: nowrap;
+      flex-shrink: 0;
+      letter-spacing: 0.5px;
+    }
+
+    .step-n {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid var(--txt-4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    .step.s-active {
+      color: var(--txt);
+    }
+
+    .step.s-active .step-n {
+      border-color: var(--brd-red);
+      color: var(--brd-red);
+      background: var(--brd-red-dim);
+    }
+
+    .step.s-done {
+      color: var(--green);
+    }
+
+    .step.s-done .step-n {
+      border-color: var(--green);
+      background: rgba(0, 200, 83, 0.1);
+      color: var(--green);
+    }
+
+    .step-line {
+      flex: 1;
+      min-width: 24px;
+      max-width: 50px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 6px;
+    }
+
+    .step.s-done+.step-line {
+      background: rgba(0, 200, 83, 0.3);
+    }
+
+    /* Form sections */
+    .form-block {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .form-block-title {
+      font-family: var(--f-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--txt);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .form-block-title .fbt-icon {
+      color: var(--brd-red);
+    }
+
+    .fg-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .fg-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .fg-full {
+      grid-column: 1/-1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-family: var(--f-mono);
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--txt-3);
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--txt);
+      font-family: var(--f-body);
+      font-size: 13px;
+      padding: 8px 11px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(204, 0, 0, 0.5);
+      box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.07);
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    select option {
+      background: var(--bg-3);
+    }
+
+    /* Invoice rows */
+    .inv-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 4px;
+    }
+
+    .inv-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .inv-row:hover {
+      border-color: var(--border-red);
+    }
+
+    .inv-row.sel {
+      border-color: var(--brd-red);
+      background: var(--brd-red-dim);
+    }
+
+    .inv-check {
+      width: 15px;
+      height: 15px;
+      border: 1px solid var(--txt-4);
+      border-radius: 3px;
+      background: var(--bg-4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      color: #0d0d0d;
+    }
+
+    .inv-row.sel .inv-check {
+      background: var(--brd-red);
+      border-color: var(--brd-red);
+    }
+
+    .inv-ref {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--txt-3);
+      flex-shrink: 0;
+      min-width: 60px;
+    }
+
+    .inv-client {
+      font-size: 12px;
+      font-weight: 500;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .inv-amt {
+      font-family: var(--f-display);
+      font-size: 15px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .inv-days {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    /* Total strip */
+    .total-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(204, 0, 0, 0.07);
+      border: 1px solid rgba(204, 0, 0, 0.2);
+      border-radius: 6px;
+      padding: 11px 15px;
+      margin-top: 10px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .total-left .tl-label {
+      font-family: var(--f-mono);
+      font-size: 8px;
+      color: var(--txt-3);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .total-left .tl-count {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--txt-2);
+      margin-top: 2px;
+    }
+
+    .total-amt {
+      font-family: var(--f-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--brd-red);
+      white-space: nowrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 20px;
+      border-radius: 6px;
+      font-family: var(--f-cond);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--brd-red);
+      color: #0d0d0d;
+    }
+
+    .btn-primary:hover {
+      background: var(--brd-red-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(204, 0, 0, 0.35);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--txt-2);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-3);
+      color: var(--txt);
+    }
+
+    .btn-success {
+      background: rgba(0, 200, 83, 0.12);
+      color: var(--green);
+      border: 1px solid rgba(0, 200, 83, 0.3);
+    }
+
+    .btn-success:hover {
+      background: rgba(0, 200, 83, 0.2);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    /* ══════════════════════════
+   VENDORS
+   ══════════════════════════ */
+    .vendor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .vcard {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .vcard:hover {
+      border-color: var(--border-red);
+      transform: translateY(-2px);
+    }
+
+    .va {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--f-display);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .vname {
+      font-family: var(--f-cond);
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .vzone {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      color: var(--txt-3);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .vstats {
+      display: flex;
+      gap: 10px;
+      font-family: var(--f-mono);
+      font-size: 9px;
+      color: var(--txt-3);
+    }
+
+    .vs strong {
+      display: block;
+      font-size: 13px;
+      color: var(--txt);
+      font-weight: 600;
+      margin-bottom: 1px;
+    }
+
+    .pbar {
+      height: 3px;
+      background: var(--bg-5);
+      border-radius: 2px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .pfill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    /* ══════════════════════════
+   DISPERSIÓN SAP
+   ══════════════════════════ */
+    .sap-timeline {
+      padding: 14px 18px;
+    }
+
+    .sap-step {
+      display: flex;
+      gap: 12px;
+      padding-bottom: 18px;
+      position: relative;
+    }
+
+    .sap-step::before {
+      content: '';
+      position: absolute;
+      left: 13px;
+      top: 26px;
+      width: 1px;
+      bottom: 0;
+      background: var(--border);
+    }
+
+    .sap-step:last-child::before {
+      display: none;
+    }
+
+    .sap-ico {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .ss-title {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .ss-detail {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--txt-3);
+    }
+
+    /* Metric rows */
+    .met-row {
+      padding: 0 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .met-item .mi-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin-bottom: 5px;
+      color: var(--txt-2);
+    }
+
+    .met-item .mi-head span {
+      font-family: var(--f-mono);
+    }
+
+    .met-nums {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 18px 18px;
+    }
+
+    .met-num {
+      background: var(--bg-3);
+      border-radius: 6px;
+      padding: 11px;
+      text-align: center;
+    }
+
+    .met-num .mn-val {
+      font-family: var(--f-display);
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .met-num .mn-lbl {
+      font-family: var(--f-mono);
+      font-size: 8px;
+      color: var(--txt-3);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* ══════════════════════════
+   TOOLBAR
+   ══════════════════════════ */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 7px 11px;
+      font-size: 11px;
+      color: var(--txt-3);
+      cursor: text;
+      min-width: 0;
+    }
+
+    .sap-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(41, 121, 255, 0.1);
+      border: 1px solid rgba(41, 121, 255, 0.2);
+      color: var(--blue);
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-family: var(--f-mono);
+      font-size: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      animation: blink 3s infinite;
+    }
+
+    /* ══════════════════════════
+   REFERENCIA MODAL
+   ══════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      animation: fadeUp 0.2s ease;
+    }
+
+    .modal-box {
+      background: var(--bg-2);
+      border: 1px solid var(--border-red);
+      border-radius: 12px;
+      padding: 28px;
+      max-width: 460px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 16px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(204, 0, 0, 0.1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--txt-3);
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .modal-close:hover {
+      color: var(--txt);
+    }
+
+    .ref-box {
+      background: linear-gradient(135deg, rgba(204, 0, 0, 0.09), rgba(204, 0, 0, 0.03));
+      border: 1px solid rgba(204, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 22px;
+      text-align: center;
+      margin: 14px 0 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ref-box::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(204, 0, 0, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+
+    .ref-top-label {
+      font-family: var(--f-mono);
+      font-size: 8px;
+      color: var(--txt-3);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .ref-number {
+      font-family: var(--f-mono);
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .ref-copy {
+      background: rgba(255, 255, 255, 0.06);
+      border: none;
+      color: var(--txt-3);
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+
+    .ref-copy:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--txt);
+    }
+
+    .ref-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      font-family: var(--f-mono);
+      font-size: 9px;
+      color: var(--txt-3);
+      letter-spacing: 1px;
+    }
+
+    .ref-meta-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .ref-meta-val {
+      font-size: 14px;
+      color: var(--txt);
+      font-weight: 500;
+    }
+
+    .modal-hint {
+      font-size: 12px;
+      color: var(--txt-3);
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .modal-hint strong {
+      color: var(--txt);
+    }
+
+    /* ══════════════════════════
+   TOAST
+   ══════════════════════════ */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--bg-3);
+      border: 1px solid var(--border-red);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      z-index: 1000;
+      transform: translateY(70px);
+      opacity: 0;
+      transition: all 0.28s ease;
+      min-width: 240px;
+      max-width: 320px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-ico {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════
+   MOBILE OVERLAY
+   ══════════════════════════ */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 99;
+    }
+
+    /* ══════════════════════════
+   RESPONSIVE
+   ══════════════════════════ */
+    @media (max-width: 1100px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid-32 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      :root {
+        --sidebar-w: 230px;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        z-index: 200;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .sync-pill {
+        display: none;
+      }
+
+      .date-tag {
+        font-size: 9px;
+        padding: 4px 8px;
+      }
+
+      .content {
+        padding: 16px;
+      }
+
+      .kpi-grid {
+        gap: 10px;
+      }
+
+      .fg-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .fg-3 {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .inv-row {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .inv-client {
+        min-width: 100%;
+        order: -1;
+      }
+
+      .btn-row {
+        justify-content: stretch;
+      }
+
+      .btn-row .btn {
+        flex: 1;
+        justify-content: center;
+      }
+
+      .ref-number {
+        font-size: 20px;
+        letter-spacing: 2px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-val {
+        font-size: 24px;
+      }
+
+      .fg-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .met-nums {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .vendor-grid {
+        grid-template-columns: 1fr 1fr;
+        padding: 12px;
+      }
+
+      .topbar {
+        padding: 0 14px;
+        gap: 10px;
+      }
+
+      .page-title {
+        font-size: 14px;
+        letter-spacing: 1.5px;
+      }
+
+      .date-tag {
+        display: none;
+      }
+
+      .modal-box {
+        padding: 20px 16px;
+      }
+
+      .ref-number {
+        font-size: 17px;
+        letter-spacing: 1.5px;
+      }
+
+      table {
+        font-size: 11px;
+      }
+
+      th,
+      td {
+        padding: 8px 10px;
+      }
+    }
+
+    /* ══════════════════════════
+   REPORTES
+   ══════════════════════════ */
+    .roi-highlight {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 28px;
+      background: linear-gradient(135deg, var(--bg-3), var(--bg-2));
+      border-radius: var(--radius);
+      border: 1px solid var(--border-red);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .roi-highlight::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(204, 0, 0, 0.1), transparent 70%);
+    }
+
+    .roi-label {
+      font-family: var(--f-mono);
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--txt-3);
+      margin-bottom: 8px;
+    }
+
+    .roi-val {
+      font-family: var(--f-display);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--brd-red);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .roi-sub {
+      font-size: 12px;
+      color: var(--txt-3);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="shell">
+
+    <!-- ══ SIDEBAR OVERLAY (mobile) ══ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- ══ SIDEBAR ══ -->
+    <nav class="sidebar" id="sidebar">
+
+      <div class="brand">
+        <div class="brand-logo">
+          <!-- Bardahl diamond badge SVG -->
+
+          <svg class="brand-badge" xmlns="http://www.w3.org/2000/svg" width="2499.801" height="1804.977"
+            viewBox="0 0 2499.801 1804.977">
+            <g id="bardahl" transform="translate(-0.1 -0.023)">
+              <path id="Trazado_255" data-name="Trazado 255"
+                d="M.1,1100.5h198q49.5,0,75.9,29.1c17.7,19.3,26.5,43.3,26.5,71.8,0,24-6.3,44.5-18.9,61.7-8.4,11.4-20.7,20.5-36.9,27.1,24.5,7,42.6,19.1,54.3,36,11.5,17.1,17.4,38.5,17.4,64.2q0,31.5-12.3,56.7c-8.3,16.8-19.5,30-33.9,39.8q-13.2,9-40.2,13.2c-23.8,3.7-39.6,5.6-47.4,5.6H.1V1100.5ZM232.2,10.4c-18.6-16.8-51.5-12.2-56,6.6L737,1109.8v395.8H843.2V1341.2L1069.9,1805h114.9L938.2,1328.4c25.5-.9,70.2,1,87-8.3,24.4-13.7,20.7-75.4,20.7-107.1,0-41.6,1.9-80.2-20.5-97.8-23.1-18.1-71.4-14.6-112.1-14.6h-110L702.4,907.9c607.1,107.2,201.9-209.7,1172.1-43.4-155-260.5-284-513.9-438.9-774.4C1083.8-92.3,836.3,232.7,268.1,78.9L232.2,10.4Zm-125.4,1249h46c16.5,0,28-3.4,34.5-10.1,6.4-6.8,9.6-16.5,9.6-29.2q0-17.7-9.6-27.6c-6.6-6.7-17.8-10-33.8-10H106.8v76.9Zm0,159.2h54c18.3,0,31.1-3.8,38.5-11.4,7.5-7.6,11.3-17.9,11.3-30.8,0-12-3.7-21.6-11.1-28.9s-20.3-10.9-38.9-10.9H106.9l-.1,82Zm467.4,20.1H453.7l-16.6,66.9H329l128.6-405.1H573l128.7,405.1H591ZM552,1351.1l-37.8-145.6-37.6,145.6Zm291.2-86.5h44.6c4.8,0,14.1-1.8,28-5.5,7-1.7,12.7-5.9,17.2-12.7a42.217,42.217,0,0,0,6.6-23.5c0-13.1-3.5-23.1-10.5-30.1-7-7.1-20.2-10.6-39.5-10.6H843.1v82.4Zm265.7-164.1H1266q46.35,0,75.1,14.9a128.312,128.312,0,0,1,47.3,42.8c12.4,18.7,21.4,40.3,27.1,65a353.814,353.814,0,0,1,8.4,78.5c0,43.3-4.1,76.9-12.5,100.7-8.3,23.9-19.8,43.9-34.7,59.9-14.8,16.1-30.6,26.9-47.6,32.3-23.2,7.4-44.2,11-63,11H1108.9V1100.5Zm105.7,91.8v221.3h25.9c22.2,0,37.9-2.8,47.2-8.7,9.3-5.8,16.6-15.9,22-30.4q7.95-21.6,7.9-70.4,0-64.35-17.7-88.1-17.85-23.85-58.9-23.8l-26.4.1Zm454.8,246.4H1548.9l-16.6,66.9H1424.2l128.6-405.1h115.3l128.7,405.1H1686.1Zm-22.1-87.6-37.8-145.6-37.6,145.6Zm183.9-250.6H1937v141.8h115.6V1100.5h106.2v405.1H2052.6V1341.8H1937v163.8H1831.3V1100.5Zm397.9,0h105.8v305.3h165v99.8H2229V1100.5Z"
+                fill="#fff" fill-rule="evenodd" />
+              <path id="Trazado_256" data-name="Trazado 256"
+                d="M293.8,126.8,369.6,283c69.8,6.3,134.5,8.6,210.6,2.4-14.9-41-32.3-82.1-66.3-123.1-80.5-2.3-152.3-7.8-220.1-35.5Zm460.6,14.4c27.7,36,57.4,88.5,64.3,125.7,84-12.6,167.2-29.9,213.4-66.5A189.194,189.194,0,0,0,972.9,98.5c-67.3,20.7-151.6,39.9-218.5,42.7ZM1216.7,63c68.3,7.5,131.2,23.2,186.9,49.7,26,48.1,64.6,96.2,90.6,144.3-64.7-45-145.9-74.2-223.2-68.6-11.7-41.8-29.8-83.7-54.3-125.4Zm144.4,298.1c31.1,43.4,55.4,89.2,80.3,132.7,63.2,12,135.9,5.8,198.9,37.7-32.4-51.3-49.6-95.7-82-147-60.7-23.3-136.5-31.7-197.2-23.4Zm160.5,290.8c15.8,44.2,48.5,90.2,83.3,128.1q101.7,1.2,194,30.8c-29.2-44.2-48.3-90.9-77.5-135-58.1-21.1-135.6-34.6-199.8-23.9ZM1268.8,197.8c-78.2,7.1-148.8,8.6-227.2,9.5,38,47.7,55.9,95,75.7,149.1a1389.193,1389.193,0,0,1,229.7-7.1c-3.4-53.2-32.7-101.3-78.2-151.5Zm-47.3,307.7c33.5,43.4,55.5,100.9,68.6,151.4,67-9.9,151.9-13.8,219-11-3.6-45.8-42.7-103.5-72.2-142.9Zm63.8,160.9c-76.4,4-163.6,18.5-210.6,59.2q41.4,57.9,54.4,116c68.7-58.8,137.3-69.9,205.9-59.2C1322.4,743.7,1310.6,705,1285.3,666.4ZM1115,368.2c-64.7-8.5-129.3,25.9-194,63.3,50.5,44.9,85.2,103.1,104.1,154.4,52.5-48,114.9-71.1,184.9-85.1-20.1-36.4-49.3-89-95-132.6ZM812.1,275.9c-73.1,16-143.7,24.2-210.6,21.3,35.5,47.3,60,87.5,82.8,134.9,69.5,14.9,148.3,7.8,217.7-9.5-9-48-52.7-92.9-89.9-146.7ZM1017.9,593q-64.05.75-128.2,3.9c-37.7,1.9-78,4.5-115.7,7.9,29.3,48.1,48.4,90.7,57.2,132.5,73.4-15,159.3-16.3,232.6-18.6C1062.5,678.5,1035.7,633.2,1017.9,593ZM684.3,446.3q-113.55,3.6-227.2,7.1c28.4,52.8,56.8,101,85.2,153.8,71-9.5,146.7-2.4,217.7-9.5C752.4,558.3,719.1,505.5,684.3,446.3ZM821.5,746.8c-74.2,0-149.1-5.5-210.6-11.8q30.75,65.1,61.5,130.1c78.1,14.6,156.2,21.7,234.3,23.7C890.6,839.3,858.8,795.9,821.5,746.8Z"
+                fill-rule="evenodd" />
+            </g>
+          </svg>
+
+        </div>
+        <div class="brand-tagline">Sistema de Cobranza Agrupada</div>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-section">Principal</div>
+        <div class="nav-item active" onclick="showScreen('dashboard', this)">
+          <span class="nav-icon">◈</span> Dashboard
+        </div>
+        <div class="nav-item" onclick="showScreen('cobro', this)">
+          <span class="nav-icon">＋</span> Nuevo Cobro
+          <span class="nav-badge">3</span>
+        </div>
+        <div class="nav-item" onclick="showScreen('referencias', this)">
+          <span class="nav-icon">⬡</span> Referencias
+        </div>
+
+        <div class="nav-section" style="margin-top:6px">Gestión</div>
+        <div class="nav-item" onclick="showScreen('vendedores', this)">
+          <span class="nav-icon">◎</span> Vendedores
+        </div>
+        <div class="nav-item" onclick="showScreen('dispersion', this)">
+          <span class="nav-icon">⟳</span> Dispersión SAP
+        </div>
+
+        <div class="nav-section" style="margin-top:6px">Análisis</div>
+        <div class="nav-item" onclick="showScreen('reportes', this)">
+          <span class="nav-icon">▣</span> Reportes
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar">YS</div>
+          <div>
+            <div class="user-name">Yairo Sequeira</div>
+            <div class="user-role">Admin · CDMX</div>
+          </div>
+          <div class="online-dot"></div>
+        </div>
+      </div>
+
+    </nav>
+
+    <!-- ══ MAIN ══ -->
+    <main class="main">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="page-title" id="pageTitle">Dashboard</div>
+        <div class="topbar-right">
+          <div class="sync-pill">
+            <div class="sync-dot"></div>SAP Online
+          </div>
+          <div class="date-tag" id="topDate">—</div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="content">
+
+        <!-- ══ DASHBOARD ══ -->
+        <div class="screen active" id="screen-dashboard">
+          <div class="kpi-grid">
+            <div class="kpi k-green">
+              <div class="kpi-label">Cobros del día</div>
+              <div class="kpi-val">$184,200</div>
+              <div class="kpi-sub"><span class="pos">↑ 12%</span> vs ayer · 23 transacciones</div>
+            </div>
+            <div class="kpi k-red">
+              <div class="kpi-label">Depósitos generados</div>
+              <div class="kpi-val">1</div>
+              <div class="kpi-sub">Antes: <span class="neg">20 depósitos</span> · ahorro 95%</div>
+            </div>
+            <div class="kpi k-yellow">
+              <div class="kpi-label">Vendedores activos</div>
+              <div class="kpi-val">43</div>
+              <div class="kpi-sub">De 450 · <span class="pos">piloto CDMX</span></div>
+            </div>
+            <div class="kpi k-blue">
+              <div class="kpi-label">Tasa conciliación</div>
+              <div class="kpi-val">99.1%</div>
+              <div class="kpi-sub">Antes: <span class="neg">85%</span> · <span class="pos">↑ 14.1pp</span></div>
+            </div>
+          </div>
+
+          <div class="grid-32">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">Actividad en Tiempo Real</div>
+                <div class="card-action">Ver todo →</div>
+              </div>
+              <div class="feed">
+                <div class="feed-item">
+                  <div class="feed-icon fi-green">✓</div>
+                  <div>
+                    <div class="feed-msg">Ref. <span class="feed-ref">BAR-2026-08412</span> dispersada en SAP</div>
+                    <div class="feed-meta">Carlos Mendoza · 23 facturas · $12,450 MXN · hace 3 min</div>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-icon fi-blue">⟳</div>
+                  <div>
+                    <div class="feed-msg">Nueva referencia agrupadora generada</div>
+                    <div class="feed-meta">Ana García · 8 facturas · $6,200 MXN · hace 8 min</div>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-icon fi-yellow">↑</div>
+                  <div>
+                    <div class="feed-msg">Depósito confirmado — BBVA Bancomer</div>
+                    <div class="feed-meta">Ref: <span class="feed-ref">BAR-2026-08410</span> · $31,800 MXN · hace 22 min
+                    </div>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-icon fi-green">✓</div>
+                  <div>
+                    <div class="feed-msg">Conciliación automática completada</div>
+                    <div class="feed-meta">15 facturas · error rate 0% · hace 25 min</div>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <div class="feed-icon fi-red">⚠</div>
+                  <div>
+                    <div class="feed-msg">Factura vencida · cliente Lubrix SA</div>
+                    <div class="feed-meta">Roberto Torres · $2,400 MXN · 45 días vencida</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">Top Vendedores</div>
+                <div class="card-action" onclick="showScreen('vendedores',null)">Ver →</div>
+              </div>
+              <div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Vendedor</th>
+                      <th>Cobrado</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="bold">C. Mendoza</td>
+                      <td class="mono">$31,200</td>
+                      <td><span class="badge b-green">Activo</span></td>
+                    </tr>
+                    <tr>
+                      <td class="bold">A. García</td>
+                      <td class="mono">$28,450</td>
+                      <td><span class="badge b-green">Activo</span></td>
+                    </tr>
+                    <tr>
+                      <td class="bold">R. Torres</td>
+                      <td class="mono">$19,800</td>
+                      <td><span class="badge b-yellow">En banco</span></td>
+                    </tr>
+                    <tr>
+                      <td class="bold">M. López</td>
+                      <td class="mono">$17,600</td>
+                      <td><span class="badge b-green">Activo</span></td>
+                    </tr>
+                    <tr>
+                      <td class="bold">P. Ramírez</td>
+                      <td class="mono">$14,250</td>
+                      <td><span class="badge b-gray">Offline</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="bars">
+                <div class="bar" style="height:52%;background:rgba(204,0,0,0.45)"></div>
+                <div class="bar" style="height:68%;background:rgba(204,0,0,0.55)"></div>
+                <div class="bar" style="height:43%;background:rgba(204,0,0,0.4)"></div>
+                <div class="bar" style="height:88%;background:var(--brd-red)"></div>
+                <div class="bar" style="height:62%;background:rgba(204,0,0,0.55)"></div>
+                <div class="bar" style="height:48%;background:rgba(204,0,0,0.45)"></div>
+                <div class="bar" style="height:78%;background:rgba(204,0,0,0.7)"></div>
+                <div class="bar" style="height:56%;background:rgba(204,0,0,0.5)"></div>
+                <div class="bar" style="height:72%;background:var(--brd-red)"></div>
+                <div class="bar" style="height:38%;background:rgba(204,0,0,0.38)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Referencias del Día</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="sap-pill">● SAP Conectado</span>
+                <span class="card-action" onclick="showScreen('referencias',null)">Historial →</span>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Referencia</th>
+                    <th>Vendedor</th>
+                    <th>Facts.</th>
+                    <th>Monto</th>
+                    <th>Hora</th>
+                    <th>Banco</th>
+                    <th>SAP</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08412</td>
+                    <td class="bold">C. Mendoza</td>
+                    <td style="text-align:center">23</td>
+                    <td class="mono">$31,200</td>
+                    <td class="mono dim-txt">09:14</td>
+                    <td><span class="badge b-green">Depositado</span></td>
+                    <td><span class="badge b-green">Dispersado</span></td>
+                    <td><span class="badge b-green">OK</span></td>
+                  </tr>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08411</td>
+                    <td class="bold">A. García</td>
+                    <td style="text-align:center">8</td>
+                    <td class="mono">$6,200</td>
+                    <td class="mono dim-txt">10:32</td>
+                    <td><span class="badge b-yellow">Pendiente</span></td>
+                    <td><span class="badge b-yellow">En espera</span></td>
+                    <td><span class="badge b-yellow">Pend.</span></td>
+                  </tr>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08410</td>
+                    <td class="bold">R. Torres</td>
+                    <td style="text-align:center">12</td>
+                    <td class="mono">$19,800</td>
+                    <td class="mono dim-txt">11:05</td>
+                    <td><span class="badge b-green">Depositado</span></td>
+                    <td><span class="badge b-blue">Procesando</span></td>
+                    <td><span class="badge b-blue">Proceso</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ NUEVO COBRO ══ -->
+        <div class="screen" id="screen-cobro">
+          <div class="flow-wrap">
+
+            <div class="steps">
+              <div class="step s-done">
+                <div class="step-n">✓</div>Vendedor
+              </div>
+              <div class="step-line"></div>
+              <div class="step s-active">
+                <div class="step-n">2</div>Facturas
+              </div>
+              <div class="step-line"></div>
+              <div class="step">
+                <div class="step-n">3</div>Referencia
+              </div>
+              <div class="step-line"></div>
+              <div class="step">
+                <div class="step-n">4</div>Confirmación
+              </div>
+            </div>
+
+            <div class="form-block">
+              <div class="form-block-title"><span class="fbt-icon">◎</span> Información del Vendedor</div>
+              <div class="fg-2">
+                <div class="field">
+                  <label>Vendedor</label>
+                  <select>
+                    <option>Carlos Mendoza · Zona Norte</option>
+                    <option>Ana García · Zona Sur</option>
+                    <option>Roberto Torres · Zona Centro</option>
+                    <option>Miguel López · Zona Oriente</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Fecha de cobro</label>
+                  <input type="date" id="cobroDate">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-block">
+              <div class="form-block-title"><span class="fbt-icon">⬡</span> Seleccionar Facturas</div>
+              <div
+                style="font-family:var(--f-mono);font-size:8px;color:var(--txt-3);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase">
+                Facturas pendientes · Carlos Mendoza
+              </div>
+              <div class="inv-list" id="invList">
+                <div class="inv-row sel" onclick="toggleInv(this,2400)">
+                  <div class="inv-check">✓</div>
+                  <div class="inv-ref">FAC-7821</div>
+                  <div class="inv-client">Auto Express Lomas</div>
+                  <div class="inv-amt">$2,400</div>
+                  <div class="inv-days" style="color:var(--green)">+15 días</div>
+                </div>
+                <div class="inv-row sel" onclick="toggleInv(this,1850)">
+                  <div class="inv-check">✓</div>
+                  <div class="inv-ref">FAC-7809</div>
+                  <div class="inv-client">Taller Mecánico Juárez</div>
+                  <div class="inv-amt">$1,850</div>
+                  <div class="inv-days" style="color:var(--green)">+8 días</div>
+                </div>
+                <div class="inv-row sel" onclick="toggleInv(this,5200)">
+                  <div class="inv-check">✓</div>
+                  <div class="inv-ref">FAC-7798</div>
+                  <div class="inv-client">Lubricantes del Norte SA</div>
+                  <div class="inv-amt">$5,200</div>
+                  <div class="inv-days" style="color:var(--yellow)">+2 días</div>
+                </div>
+                <div class="inv-row" onclick="toggleInv(this,3100)">
+                  <div class="inv-check"></div>
+                  <div class="inv-ref">FAC-7756</div>
+                  <div class="inv-client">Servicio Rápido Polanco</div>
+                  <div class="inv-amt">$3,100</div>
+                  <div class="inv-days" style="color:var(--brd-red)">−12 días</div>
+                </div>
+                <div class="inv-row" onclick="toggleInv(this,890)">
+                  <div class="inv-check"></div>
+                  <div class="inv-ref">FAC-7743</div>
+                  <div class="inv-client">Refaccionaria Condesa</div>
+                  <div class="inv-amt">$890</div>
+                  <div class="inv-days" style="color:var(--green)">+20 días</div>
+                </div>
+              </div>
+              <div class="total-strip">
+                <div class="total-left">
+                  <div class="tl-label">Total agrupado</div>
+                  <div class="tl-count" id="selCount">3 facturas seleccionadas</div>
+                </div>
+                <div class="total-amt" id="totalAmt">$9,450 MXN</div>
+              </div>
+            </div>
+
+            <div class="form-block">
+              <div class="form-block-title"><span class="fbt-icon">↑</span> Comprobante de Depósito</div>
+              <div class="fg-2">
+                <div class="field">
+                  <label>Banco destino</label>
+                  <select>
+                    <option>BBVA Bancomer</option>
+                    <option>Banorte</option>
+                    <option>HSBC México</option>
+                    <option>Santander</option>
+                    <option>Citibanamex</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Número de operación</label>
+                  <input type="text" placeholder="Ej: 20260213001234" style="font-family:var(--f-mono);font-size:12px">
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn-ghost">Cancelar</button>
+              <button class="btn btn-primary" onclick="abrirModal()">Generar Referencia →</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══ REFERENCIAS ══ -->
+        <div class="screen" id="screen-referencias">
+          <div class="card">
+            <div class="toolbar">
+              <div class="search-bar" style="flex:1;max-width:280px">🔍 Buscar referencia o vendedor…</div>
+              <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <span class="badge b-gray">Hoy: 8</span>
+                <span class="badge b-blue">Semana: 47</span>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Referencia</th>
+                    <th>Vendedor</th>
+                    <th>Zona</th>
+                    <th>Facts.</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                    <th>Banco</th>
+                    <th>SAP</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08412</td>
+                    <td class="bold">Carlos Mendoza</td>
+                    <td class="dim-txt">Norte</td>
+                    <td style="text-align:center">23</td>
+                    <td class="mono">$31,200</td>
+                    <td class="mono dim-txt">13 Feb 09:14</td>
+                    <td><span class="badge b-green">BBVA</span></td>
+                    <td><span class="badge b-green">Completa</span></td>
+                    <td><span class="badge b-green">OK</span></td>
+                  </tr>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08411</td>
+                    <td class="bold">Ana García</td>
+                    <td class="dim-txt">Sur</td>
+                    <td style="text-align:center">8</td>
+                    <td class="mono">$6,200</td>
+                    <td class="mono dim-txt">13 Feb 10:32</td>
+                    <td><span class="badge b-yellow">Pendiente</span></td>
+                    <td><span class="badge b-yellow">Espera</span></td>
+                    <td><span class="badge b-yellow">Pend.</span></td>
+                  </tr>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08410</td>
+                    <td class="bold">Roberto Torres</td>
+                    <td class="dim-txt">Centro</td>
+                    <td style="text-align:center">12</td>
+                    <td class="mono">$19,800</td>
+                    <td class="mono dim-txt">13 Feb 11:05</td>
+                    <td><span class="badge b-green">Banorte</span></td>
+                    <td><span class="badge b-blue">Proceso</span></td>
+                    <td><span class="badge b-blue">Proceso</span></td>
+                  </tr>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08409</td>
+                    <td class="bold">Miguel López</td>
+                    <td class="dim-txt">Oriente</td>
+                    <td style="text-align:center">6</td>
+                    <td class="mono">$8,400</td>
+                    <td class="mono dim-txt">12 Feb 16:22</td>
+                    <td><span class="badge b-green">BBVA</span></td>
+                    <td><span class="badge b-green">Completa</span></td>
+                    <td><span class="badge b-green">OK</span></td>
+                  </tr>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08408</td>
+                    <td class="bold">Patricia Ramírez</td>
+                    <td class="dim-txt">Norte</td>
+                    <td style="text-align:center">17</td>
+                    <td class="mono">$24,100</td>
+                    <td class="mono dim-txt">12 Feb 14:10</td>
+                    <td><span class="badge b-green">HSBC</span></td>
+                    <td><span class="badge b-green">Completa</span></td>
+                    <td><span class="badge b-green">OK</span></td>
+                  </tr>
+                  <tr>
+                    <td class="mono red-txt">BAR-2026-08407</td>
+                    <td class="bold">Carlos Mendoza</td>
+                    <td class="dim-txt">Norte</td>
+                    <td style="text-align:center">20</td>
+                    <td class="mono">$27,500</td>
+                    <td class="mono dim-txt">12 Feb 09:45</td>
+                    <td><span class="badge b-green">BBVA</span></td>
+                    <td><span class="badge b-green">Completa</span></td>
+                    <td><span class="badge b-green">OK</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ VENDEDORES ══ -->
+        <div class="screen" id="screen-vendedores">
+          <div class="card">
+            <div class="toolbar">
+              <div class="search-bar" style="flex:1;max-width:280px">🔍 Buscar vendedor…</div>
+              <div style="margin-left:auto">
+                <span style="font-family:var(--f-mono);font-size:9px;color:var(--txt-3)">43 activos / 450 total</span>
+              </div>
+            </div>
+            <div class="vendor-grid">
+              <div class="vcard" onclick="toast('🔍 Perfil de vendedor')">
+                <div class="va" style="background:rgba(0,200,83,0.1);color:var(--green)">CM</div>
+                <div class="vname">Carlos Mendoza</div>
+                <div class="vzone">📍 Zona Norte · CDMX</div>
+                <div class="vstats">
+                  <div class="vs"><strong>$31,200</strong>hoy</div>
+                  <div class="vs"><strong>23</strong>facts</div>
+                  <div class="vs"><strong>1</strong>dep.</div>
+                </div>
+                <div class="pbar">
+                  <div class="pfill" style="width:87%;background:var(--green)"></div>
+                </div>
+              </div>
+              <div class="vcard" onclick="toast('🔍 Perfil de vendedor')">
+                <div class="va" style="background:rgba(41,121,255,0.1);color:var(--blue)">AG</div>
+                <div class="vname">Ana García</div>
+                <div class="vzone">📍 Zona Sur · CDMX</div>
+                <div class="vstats">
+                  <div class="vs"><strong>$6,200</strong>hoy</div>
+                  <div class="vs"><strong>8</strong>facts</div>
+                  <div class="vs"><strong>1</strong>dep.</div>
+                </div>
+                <div class="pbar">
+                  <div class="pfill" style="width:42%;background:var(--blue)"></div>
+                </div>
+              </div>
+              <div class="vcard" onclick="toast('🔍 Perfil de vendedor')">
+                <div class="va" style="background:rgba(255,179,0,0.1);color:var(--yellow)">RT</div>
+                <div class="vname">Roberto Torres</div>
+                <div class="vzone">📍 Zona Centro · CDMX</div>
+                <div class="vstats">
+                  <div class="vs"><strong>$19,800</strong>hoy</div>
+                  <div class="vs"><strong>12</strong>facts</div>
+                  <div class="vs"><strong>1</strong>dep.</div>
+                </div>
+                <div class="pbar">
+                  <div class="pfill" style="width:65%;background:var(--yellow)"></div>
+                </div>
+              </div>
+              <div class="vcard" onclick="toast('🔍 Perfil de vendedor')">
+                <div class="va" style="background:rgba(204,0,0,0.1);color:var(--brd-red)">ML</div>
+                <div class="vname">Miguel López</div>
+                <div class="vzone">📍 Zona Oriente · CDMX</div>
+                <div class="vstats">
+                  <div class="vs"><strong>$17,600</strong>hoy</div>
+                  <div class="vs"><strong>9</strong>facts</div>
+                  <div class="vs"><strong>1</strong>dep.</div>
+                </div>
+                <div class="pbar">
+                  <div class="pfill" style="width:58%;background:var(--brd-red)"></div>
+                </div>
+              </div>
+              <div class="vcard" onclick="toast('🔍 Perfil de vendedor')">
+                <div class="va" style="background:var(--bg-4);color:var(--txt-2)">PR</div>
+                <div class="vname">Patricia Ramírez</div>
+                <div class="vzone">📍 Zona Norte · GDL</div>
+                <div class="vstats">
+                  <div class="vs"><strong>$14,250</strong>hoy</div>
+                  <div class="vs"><strong>11</strong>facts</div>
+                  <div class="vs"><strong>1</strong>dep.</div>
+                </div>
+                <div class="pbar">
+                  <div class="pfill" style="width:30%;background:var(--txt-3)"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ DISPERSIÓN SAP ══ -->
+        <div class="screen" id="screen-dispersion">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">Timeline Dispersión</div>
+                <span class="sap-pill">● LIVE</span>
+              </div>
+              <div class="sap-timeline">
+                <div class="sap-step">
+                  <div class="sap-ico fi-green">✓</div>
+                  <div>
+                    <div class="ss-title">Depósito recibido — BAR-2026-08412</div>
+                    <div class="ss-detail">BBVA confirmó $31,200 MXN · 09:14:32</div>
+                  </div>
+                </div>
+                <div class="sap-step">
+                  <div class="sap-ico fi-green">✓</div>
+                  <div>
+                    <div class="ss-title">Referencia validada en sistema</div>
+                    <div class="ss-detail">23 facturas encontradas · suma $31,200 ✓</div>
+                  </div>
+                </div>
+                <div class="sap-step">
+                  <div class="sap-ico fi-green">✓</div>
+                  <div>
+                    <div class="ss-title">BAPI ZBAPI_FI_PAYMENT_DISPERSION</div>
+                    <div class="ss-detail">Step Functions workflow iniciado · 09:14:40</div>
+                  </div>
+                </div>
+                <div class="sap-step">
+                  <div class="sap-ico fi-green">✓</div>
+                  <div>
+                    <div class="ss-title">23 facturas dispersadas en SAP FI</div>
+                    <div class="ss-detail">Posteo FI completado con commit · 09:14:43</div>
+                  </div>
+                </div>
+                <div class="sap-step">
+                  <div class="sap-ico fi-green">✓</div>
+                  <div>
+                    <div class="ss-title">Conciliación bancaria automática</div>
+                    <div class="ss-detail">100% conciliadas · 0 errores · 09:14:45</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">Métricas AWS / SAP</div>
+              </div>
+              <div class="met-row">
+                <div class="met-item">
+                  <div class="mi-head"><span>Tasa de éxito SAP</span><span style="color:var(--green)">99.1%</span></div>
+                  <div class="pbar">
+                    <div class="pfill" style="width:99.1%;background:var(--green)"></div>
+                  </div>
+                </div>
+                <div class="met-item">
+                  <div class="mi-head"><span>Latencia promedio</span><span style="color:var(--blue)">3.2s</span></div>
+                  <div class="pbar">
+                    <div class="pfill" style="width:32%;background:var(--blue)"></div>
+                  </div>
+                </div>
+                <div class="met-item">
+                  <div class="mi-head"><span>Cola SQS pendiente</span><span style="color:var(--yellow)">2 msgs</span>
+                  </div>
+                  <div class="pbar">
+                    <div class="pfill" style="width:5%;background:var(--yellow)"></div>
+                  </div>
+                </div>
+                <div class="met-item">
+                  <div class="mi-head"><span>Dead Letter Queue</span><span style="color:var(--green)">0 errores</span>
+                  </div>
+                  <div class="pbar">
+                    <div class="pfill" style="width:0%;background:var(--brd-red)"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="met-nums">
+                <div class="met-num">
+                  <div class="mn-val" style="color:var(--green)">4.1s</div>
+                  <div class="mn-lbl">Tiempo total</div>
+                </div>
+                <div class="met-num">
+                  <div class="mn-val" style="color:var(--brd-red)">8ms</div>
+                  <div class="mn-lbl">Local Zone</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ REPORTES ══ -->
+        <div class="screen" id="screen-reportes">
+          <div class="kpi-grid">
+            <div class="kpi k-green">
+              <div class="kpi-label">Ahorro mensual estimado</div>
+              <div class="kpi-val" style="font-size:22px">$3.37M MXN</div>
+              <div class="kpi-sub">450 vendedores × 2.5hrs × $150</div>
+            </div>
+            <div class="kpi k-red">
+              <div class="kpi-label">Costo infraestructura</div>
+              <div class="kpi-val" style="font-size:22px">$7,829 MXN</div>
+              <div class="kpi-sub">$460 USD/mes · AWS Virginia + CDMX</div>
+            </div>
+            <div class="kpi k-yellow">
+              <div class="kpi-label">Depósitos eliminados</div>
+              <div class="kpi-val" style="font-size:22px">8,550</div>
+              <div class="kpi-sub">Reducción 95% · de 20 → 1 por día</div>
+            </div>
+            <div class="kpi k-blue">
+              <div class="kpi-label">Payback</div>
+              <div class="kpi-val" style="font-size:22px">&lt; 1 día</div>
+              <div class="kpi-sub">Recuperación inmediata de inversión</div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="roi-highlight">
+              <div class="roi-label">Retorno sobre la inversión</div>
+              <div class="roi-val">49,670%</div>
+              <div class="roi-sub">$3,375,000 ahorro vs $6,746 inversión mensual</div>
+            </div>
+
+            <div class="card" style="margin:0">
+              <div class="card-head">
+                <div class="card-title">Piloto — Semanas</div>
+              </div>
+              <div class="tbl-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Semana</th>
+                      <th>Vendedores</th>
+                      <th>Cobros</th>
+                      <th>Monto</th>
+                      <th>Dep. reales</th>
+                      <th>Error %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="mono">S1 · Feb 3</td>
+                      <td>10</td>
+                      <td>184</td>
+                      <td class="mono">$432K</td>
+                      <td style="color:var(--green);font-weight:600">10</td>
+                      <td class="mono" style="color:var(--green)">0.5%</td>
+                    </tr>
+                    <tr>
+                      <td class="mono">S2 · Feb 10</td>
+                      <td>25</td>
+                      <td>460</td>
+                      <td class="mono">$1.08M</td>
+                      <td style="color:var(--green);font-weight:600">25</td>
+                      <td class="mono" style="color:var(--green)">0.2%</td>
+                    </tr>
+                    <tr>
+                      <td class="mono">S3 · Feb 17</td>
+                      <td>43</td>
+                      <td>792</td>
+                      <td class="mono">$1.86M</td>
+                      <td style="color:var(--green);font-weight:600">43</td>
+                      <td class="mono" style="color:var(--green)">0.1%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </main>
+  </div>
+
+  <!-- ══ MODAL REFERENCIA ══ -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+
+      <div
+        style="font-family:var(--f-display);font-size:15px;font-weight:600;letter-spacing:2px;text-align:center;text-transform:uppercase;margin-bottom:2px">
+        Referencia Generada
+      </div>
+      <div
+        style="font-family:var(--f-mono);font-size:9px;color:var(--txt-3);text-align:center;letter-spacing:1.5px;text-transform:uppercase">
+        Realiza UN solo depósito bancario
+      </div>
+
+      <div class="ref-box">
+        <div class="ref-top-label">Referencia Única de Depósito</div>
+        <div class="ref-number">
+          BAR-2026-08413
+          <button class="ref-copy" onclick="toast('📋 Referencia copiada')">⧉</button>
+        </div>
+        <div class="ref-meta">
+          <div class="ref-meta-item">
+            <span>Facturas</span>
+            <span class="ref-meta-val" id="modalFacts">3</span>
+          </div>
+          <div class="ref-meta-item">
+            <span>Total</span>
+            <span class="ref-meta-val" id="modalTotal">$9,450</span>
+          </div>
+          <div class="ref-meta-item">
+            <span>Expira</span>
+            <span class="ref-meta-val">18:00 hrs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-hint">
+        Deposita <strong id="modalHintAmt">$9,450 MXN</strong> con esta referencia.<br>
+        SAP dispersará automáticamente las <strong id="modalHintFacts">3</strong> facturas.
+      </div>
+
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="cerrarModal()">← Volver</button>
+        <button class="btn btn-success" style="flex:1;justify-content:center" onclick="confirmar()">✓ Confirmar
+          depósito</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOAST ══ -->
+  <div class="toast" id="toast">
+    <span class="toast-ico" id="toastIco">✅</span>
+    <span id="toastMsg">Listo</span>
+  </div>
+
+  <script>
+    /* ── SCREEN MANAGER ── */
+    const pageTitles = {
+      dashboard: 'Dashboard', cobro: 'Nuevo Cobro',
+      referencias: 'Referencias Agrupadas', vendedores: 'Vendedores',
+      dispersion: 'Dispersión SAP', reportes: 'Reportes & ROI'
+    };
+
+    function showScreen(id, el) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const s = document.getElementById('screen-' + id);
+      if (s) s.classList.add('active');
+      if (el) el.classList.add('active');
+      else {
+        document.querySelectorAll('.nav-item').forEach(n => {
+          if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) n.classList.add('active');
+        });
+      }
+      document.getElementById('pageTitle').textContent = pageTitles[id] || id;
+      closeSidebar();
+    }
+
+    /* ── SIDEBAR MOBILE ── */
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+
+    /* ── DATE ── */
+    function updateDate() {
+      const d = new Date();
+      document.getElementById('topDate').textContent =
+        d.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' }).toUpperCase()
+        + ' · ' + d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    }
+    updateDate();
+    setInterval(updateDate, 30000);
+    document.getElementById('cobroDate').value = new Date().toISOString().split('T')[0];
+
+    /* ── INVOICE TOGGLE ── */
+    let selN = 3, selAmt = 9450;
+
+    function toggleInv(row, amt) {
+      if (row.classList.contains('sel')) {
+        row.classList.remove('sel');
+        row.querySelector('.inv-check').textContent = '';
+        selN--; selAmt -= amt;
+      } else {
+        row.classList.add('sel');
+        row.querySelector('.inv-check').textContent = '✓';
+        selN++; selAmt += amt;
+      }
+      document.getElementById('selCount').textContent = selN + ' facturas seleccionadas';
+      document.getElementById('totalAmt').textContent = '$' + selAmt.toLocaleString('es-MX') + ' MXN';
+    }
+
+    /* ── MODAL ── */
+    function abrirModal() {
+      if (selN === 0) { toast('⚠️ Selecciona al menos una factura'); return; }
+      document.getElementById('modalFacts').textContent = selN;
+      document.getElementById('modalTotal').textContent = '$' + selAmt.toLocaleString('es-MX');
+      document.getElementById('modalHintAmt').textContent = '$' + selAmt.toLocaleString('es-MX') + ' MXN';
+      document.getElementById('modalHintFacts').textContent = selN;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function cerrarModal() {
+      document.getElementById('modal').classList.remove('open');
+    }
+
+    function confirmar() {
+      cerrarModal();
+      toast('✅ Depósito confirmado · SAP dispersará automáticamente');
+      setTimeout(() => showScreen('dispersion', null), 1200);
+    }
+
+    /* ── TOAST ── */
+    let toastTmr;
+    function toast(msg) {
+      clearTimeout(toastTmr);
+      document.getElementById('toastMsg').textContent = msg;
+      document.getElementById('toast').classList.add('show');
+      toastTmr = setTimeout(() => document.getElementById('toast').classList.remove('show'), 3200);
+    }
+
+    /* ── CLOSE MODAL ON BACKDROP ── */
+    document.getElementById('modal').addEventListener('click', function (e) {
+      if (e.target === this) cerrarModal();
+    });
+  </script>
+</body>
+
+</html>
